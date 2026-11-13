@@ -2,7 +2,7 @@
 
 ## 1. Présentation de l'entreprise
 
-| | |
+| Élément| Détail|
 |---|---|
 | **Raison sociale** | Logisud (entreprise fictive) |
 | **Activité** | Logistique et distribution de fournitures pour les professionnels |
