@@ -1,0 +1,16 @@
+# --- Fichiers de machines virtuelles (trop lourds) ---
+*.iso
+*.vmdk
+*.ova
+*.ovf
+
+# --- Données sensibles : ne jamais publier ---
+config.xml
+*.key
+*.pem
+*.ovpn
+secrets/
+
+# --- Fichiers parasites de Windows ---
+Thumbs.db
+desktop.ini
