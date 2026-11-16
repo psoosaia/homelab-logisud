@@ -31,6 +31,8 @@
 | `FS` | Serveur de fichiers | `NCY-FS-01` |
 | `GLPI` | Gestion de parc et assistance | `NCY-GLPI-01` |
 | `SUP` | Supervision (Zabbix) | `NCY-SUP-01` |
+| `SIEM` | Centralisation des événements de sécurité (Wazuh) | `NCY-SIEM-01` |
+| `BAS` | Bastion d'administration | `NCY-BAS-01` |
 | `PBS` | Serveur de sauvegarde | `NCY-PBS-01` |
 | `WEB` | Serveur web | `NCY-WEB-01` |
 | `PC` | Poste fixe | `NCY-PC-001` |
