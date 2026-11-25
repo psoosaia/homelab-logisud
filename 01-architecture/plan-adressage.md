@@ -61,6 +61,8 @@ L'accès aux données entre services (comptabilité, RH…) n'est pas géré par
 | | | NCY-SIEM-01 | `10.10.20.32` |
 | `.40` à `.49` | Sauvegarde | NCY-PBS-01 | `10.10.20.40` |
 
+`NCY-PBS-01` est une **machine physique distincte** de l'hyperviseur `NCY-PVE-01`, raccordée au switch dans le VLAN 20 : les sauvegardes restent disponibles en cas de panne du serveur de production. Tous les autres serveurs sont des VM hébergées sur `NCY-PVE-01`.
+
 ### VLAN 40 — DMZ
 
 | Tranche | Usage | Machine | Adresse |
