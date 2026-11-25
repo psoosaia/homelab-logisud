@@ -2,7 +2,8 @@
 
 | Élément | Valeur |
 |---|---|
-| Version | 1.0 |
+| Version | 1.1 |
+| Statut | Rédigé — commandes à valider lors du déploiement de chaque équipement |
 | Utilisation | Étape « Diagnostic » de la [procédure de traitement des incidents](procedure-incident.md) |
 | Références | [Plan d'adressage](../01-architecture/plan-adressage.md) · [Matrice des flux](../01-architecture/matrice-flux.md) · [Journal des changements](changements.md#4-journal-des-changements) |
 
@@ -43,13 +44,15 @@ Un échec de `ping` est interprété au regard de la [matrice des flux](../01-ar
 
 ## 4. Vérifications par couche
 
-| Couche | Vérifications | Commandes |
-|---|---|---|
-| 1 — Physique | Câble, voyants, état du port | `show interfaces status` |
-| 2 — Liaison | VLAN du port, trunk vers pfSense, table MAC | `show vlan brief` · `show interfaces trunk` · `show mac address-table` · `arp -a` |
-| 3 — Réseau | Adresse IP, masque, passerelle, routage | `ipconfig /all` · `ping` · `tracert` · `ip a` · `ip r` · `traceroute` |
-| 4 — Transport | Port du service, filtrage pfSense | `Test-NetConnection <IP> -Port <port>` · `ss -tulpn` · `nc -zv <IP> <port>` · pfSense : *Status > System Logs > Firewall* |
-| 7 — Application | Service, résolution DNS, compte AD, droits NTFS | `nslookup <nom>.logisud.lan` · `services.msc` · Observateur d'événements · `systemctl status <service>` · `journalctl -u <service>` |
+| Couche | Vérifications | Switch Cisco (`NCY-SW-01`) | Poste ou serveur Windows | Serveur Linux | pfSense (`NCY-FW-01`) |
+|---|---|---|---|---|---|
+| 1 — Physique | Câble, voyants, état du port | `show interfaces status` | `Get-NetAdapter` | `ip link` | *Status > Interfaces* |
+| 2 — Liaison | VLAN du port, trunk vers pfSense, table MAC | `show vlan brief` · `show interfaces trunk` · `show mac address-table` | `arp -a` | `ip neigh` | *Diagnostics > ARP Table* |
+| 3 — Réseau | Adresse IP, masque, passerelle, routage | `show ip interface brief` | `ipconfig /all` · `ping` · `tracert` | `ip a` · `ip r` · `ping` · `traceroute` | *Diagnostics > Ping* · *Diagnostics > Routes* |
+| 4 — Transport | Port du service, filtrage pfSense | — | `Test-NetConnection <IP> -Port <port>` | `ss -tulpn` · `nc -zv <IP> <port>` | *Status > System Logs > Firewall* |
+| 7 — Application | Service, résolution DNS, compte AD, droits NTFS | — | `nslookup <nom>.logisud.lan` · `services.msc` · Observateur d'événements | `systemctl status <service>` · `journalctl -u <service>` | *Status > Services* |
+
+Les couches 5 et 6 ne font pas l'objet de vérifications spécifiques : elles sont couvertes par les tests de la couche 7.
 
 ## 5. Cas fréquents
 

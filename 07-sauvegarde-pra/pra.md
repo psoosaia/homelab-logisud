@@ -2,7 +2,8 @@
 
 | Élément | Valeur |
 |---|---|
-| Version | 1.0 |
+| Version | 1.1 |
+| Statut | Rédigé — à mettre en œuvre et à tester lors de la phase sauvegarde et PRA |
 | Références | [Cahier des charges](../00-cahier-des-charges/README.md#4-contraintes) · [Plan d'adressage](../01-architecture/plan-adressage.md) · [SLA](../08-procedures/sla.md) · [Procédure incident](../08-procedures/procedure-incident.md) |
 
 ## 1. Contexte
@@ -16,6 +17,8 @@ L'infrastructure repose sur un serveur de production unique (`NCY-PVE-01`). Ce p
 |---|---|---|
 | **RTO** | Durée maximale d'interruption | 4 h |
 | **RPO** | Perte de données maximale | 24 h |
+
+Le RPO de 24 h s'applique aux sauvegardes quotidiennes sur `NCY-PBS-01`. La copie hors site, synchronisée chaque semaine, offre un RPO d'une semaine : elle n'est utilisée que si `NCY-PBS-01` est perdu ou compromis.
 
 ## 2. Analyse d'impact
 
@@ -35,7 +38,7 @@ L'infrastructure repose sur un serveur de production unique (`NCY-PVE-01`). Ce p
 | Règle | Mise en œuvre |
 |---|---|
 | 3 copies | Production sur `NCY-PVE-01`, sauvegarde sur `NCY-PBS-01`, copie externalisée |
-| 2 supports distincts | `NCY-PVE-01` et `NCY-PBS-01` sont deux machines physiques distinctes |
+| 2 supports distincts | `NCY-PVE-01` et `NCY-PBS-01` sont deux machines physiques distinctes : une panne du serveur de production n'affecte pas les sauvegardes |
 | 1 copie hors site | Disque USB chiffré alimenté par PBS, conservé hors des locaux |
 
 | Élément | Méthode | Fréquence | Rétention |
@@ -70,7 +73,9 @@ Durée estimée : 1 h.
    5. `NCY-WEB-01`
 5. Vérification de chaque service avant de passer au suivant.
 
-Durée estimée : 3 à 5 h. Mesures pour tenir le RTO : support d'installation Proxmox prêt à l'emploi, machine de remplacement identifiée, procédure chronométrée lors des tests.
+Objectif : 4 h au maximum (RTO). Mesures pour le tenir : support d'installation Proxmox prêt à l'emploi, machine de remplacement identifiée, sauvegardes disponibles sur `NCY-PBS-01` sans dépendance au serveur en panne.
+
+La durée réelle est mesurée lors de l'exercice annuel (§5). Si elle dépasse le RTO, la stratégie de reprise ou le RTO est révisé avec la direction.
 
 ### Scénario C — Attaque par rançongiciel
 1. Isolement immédiat des machines touchées (déconnexion réseau dans Proxmox, débranchement des postes), sans extinction afin de préserver les traces.
@@ -88,9 +93,9 @@ Durée estimée : 3 à 5 h. Mesures pour tenir le RTO : support d'installation P
 Durée estimée : 30 min.
 
 ### Scénario E — Panne d'un contrôleur de domaine
-1. Les postes utilisent le second contrôleur, déclaré comme serveur DNS : pas d'interruption (P3).
+1. Les postes utilisent le second contrôleur, déclaré comme serveur DNS : pas d'interruption de l'authentification ni de la résolution de noms (P3).
 2. Restauration depuis PBS, ou réinstallation et promotion du contrôleur avec réplication de l'annuaire.
-3. Le DHCP étant porté par `NCY-DC-01`, sa restauration est prioritaire : les postes conservent leur adresse jusqu'à expiration du bail.
+3. Le DHCP étant porté uniquement par `NCY-DC-01`, sa panne empêche l'attribution d'adresses aux nouveaux postes ; les postes déjà connectés conservent leur adresse jusqu'à expiration du bail. La restauration de `NCY-DC-01` est donc prioritaire (P2). Le basculement DHCP entre les deux contrôleurs supprimerait ce risque (voir §6).
 
 ## 5. Tests
 
@@ -106,6 +111,8 @@ Durée estimée : 30 min.
 | Date | Test | Durée | Résultat | Remarques |
 |---|---|---|---|---|
 | | | | | |
+
+*Aucun test réalisé à ce jour : le registre sera complété à la mise en œuvre des sauvegardes.*
 
 ## 6. Mesures de continuité
 

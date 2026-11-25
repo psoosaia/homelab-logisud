@@ -2,7 +2,8 @@
 
 | Élément | Valeur |
 |---|---|
-| Version | 1.0 |
+| Version | 1.1 |
+| Statut | Rédigé — applicable après le déploiement de GLPI et de Zabbix |
 | Fournisseur | Service informatique de Logisud (1 administrateur systèmes et réseaux) |
 | Client | Direction et salariés de Logisud (40 personnes, site de Nancy) |
 | Références | [Cahier des charges](../00-cahier-des-charges/README.md) · [Plan d'adressage](../01-architecture/plan-adressage.md) · [Procédure incident](procedure-incident.md) · [PRA](../07-sauvegarde-pra/pra.md) |
@@ -44,7 +45,7 @@ La disponibilité est mesurée sur les heures ouvrées, soit environ 220 h par m
 | 99 % | ≈ 2 h 12 |
 | 98 % | ≈ 4 h 24 |
 
-**Exclusions** : maintenances planifiées annoncées, pannes du fournisseur d'accès Internet, coupures électriques (absence d'onduleur, risque accepté dans le cahier des charges).
+**Exclusions** : maintenances planifiées annoncées, pannes du fournisseur d'accès Internet, coupures électriques (absence d'onduleur, risque accepté dans le cahier des charges), sinistres majeurs relevant du [PRA](../07-sauvegarde-pra/pra.md) (panne du serveur de production, rançongiciel). Ces sinistres sont traités selon les objectifs du PRA : rétablissement en 4 h (RTO) et perte de données de 24 h au maximum (RPO).
 
 ## 3. Priorités et délais d'intervention
 

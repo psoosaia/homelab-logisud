@@ -2,7 +2,8 @@
 
 | Élément | Valeur |
 |---|---|
-| Version | 1.0 |
+| Version | 1.1 |
+| Statut | Rédigé — appliqué à la mise en production de l'infrastructure |
 | Outil | GLPI (*Assistance > Changements*) |
 | Références | [SLA](sla.md) · [Procédure incident](procedure-incident.md) · [PRA](../07-sauvegarde-pra/pra.md) |
 
@@ -13,6 +14,9 @@
 | **Standard** | Changement courant, à faible risque, suivant une procédure connue | Pré-approuvé | Création d'un compte AD, ajout d'un poste au domaine, mises à jour Windows mensuelles |
 | **Normal** | Changement planifié comportant un risque | Analyse de risque et validation par la direction | Règle pfSense, configuration du switch, mise à jour de pfSense ou de Proxmox, nouvelle GPO |
 | **Urgent** | Changement requis pour résoudre un incident P1 ou corriger une faille critique | Validation rapide par la direction, documentation a posteriori | Correctif de sécurité, correction pendant un incident P1 |
+
+- **Changement standard** : exécuté directement selon sa procédure d'exploitation, puis consigné dans le [journal](#4-journal-des-changements). Le modèle complet de demande n'est pas requis.
+- **Changement urgent** : le point de restauration, les tests et le plan de retour arrière restent obligatoires. Seules la demande et la validation formelles sont complétées après l'intervention.
 
 ## 2. Processus d'un changement normal
 
@@ -80,7 +84,8 @@ Un changement par ligne, le plus récent en haut.
 |---|---|
 | VM Proxmox | Snapshot (*VM > Snapshots > Take Snapshot*), supprimé après validation du changement |
 | pfSense | Export de la configuration (*Diagnostics > Backup & Restore*) |
-| `NCY-SW-01` | `copy running-config startup-config` et export de la `running-config` |
+| Hôte Proxmox (`NCY-PVE-01`) | Vérification de la dernière sauvegarde de chaque VM dans `NCY-PBS-01`, copie de `/etc/pve` et de `/etc/network/interfaces` hors du serveur |
+| `NCY-SW-01` | `copy running-config startup-config` et export de la `running-config` avant modification. Pour toute modification susceptible de couper l'accès d'administration : `reload in 10` avant l'intervention, puis `reload cancel` après validation. En cas de perte d'accès, le switch redémarre sur sa configuration sauvegardée |
 | Active Directory / GPO | Snapshot de la VM et sauvegarde de la GPO concernée |
 
 Les exports de configuration contiennent des secrets : ils sont conservés hors du dépôt (`secrets/`, exclu par le `.gitignore`).

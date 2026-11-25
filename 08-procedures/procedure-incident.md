@@ -2,7 +2,8 @@
 
 | Élément | Valeur |
 |---|---|
-| Version | 1.0 |
+| Version | 1.1 |
+| Statut | Rédigé — applicable après le déploiement de GLPI, Zabbix et Wazuh |
 | Outils | GLPI (`NCY-GLPI-01`) · Zabbix (`NCY-SUP-01`) · Wazuh (`NCY-SIEM-01`) |
 | Références | [SLA](sla.md) · [Démarche de diagnostic](diagnostic.md) · [Gestion des changements](changements.md) · [PRA](../07-sauvegarde-pra/pra.md) |
 
@@ -19,8 +20,10 @@ Les incidents sont gérés dans *Assistance > Tickets* et les problèmes dans *A
 
 | Niveau | Intervenant | Rôle |
 |---|---|---|
-| **N1** | Administrateur | Prise en compte, application des solutions connues (base de connaissances GLPI) |
-| **N2** | Administrateur, compte `adm-…` via le bastion `NCY-BAS-01` | Diagnostic approfondi sur serveurs, réseau et pare-feu |
+| **N1** | Administrateur, compte utilisateur standard | Prise en compte du ticket, qualification, application des solutions connues de la base de connaissances GLPI, sans intervention sur l'infrastructure |
+| **N2** | Administrateur, compte `adm-…` via le bastion `NCY-BAS-01` | Diagnostic approfondi et intervention sur les serveurs, le réseau et le pare-feu |
+
+Avec un administrateur unique, N1 et N2 sont assurés par la même personne : la distinction porte sur le périmètre d'intervention et le compte utilisé, conformément au principe du moindre privilège.
 | **N3** | Fournisseur d'accès, prestataire de messagerie, éditeurs | Problèmes hors du périmètre interne |
 
 ## 3. Cycle de vie d'un incident
@@ -54,7 +57,7 @@ Impact et urgence renseignés dans le ticket. GLPI calcule la priorité et appli
 | Type | Déclencheur |
 |---|---|
 | **Fonctionnelle** (vers N3) | Panne d'un fournisseur, anomalie logicielle, compétence externe requise |
-| **Hiérarchique** (vers la direction) | Incident P1 de plus de 2 h ou risque de dépassement du SLA |
+| **Hiérarchique** (vers la direction) | Incident P1 de plus de 2 h, incident P2 dépassant son délai de résolution, ou risque de dépassement du SLA |
 
 ### 3.7 Résolution
 - Correction ou contournement.
@@ -82,6 +85,7 @@ Le problème comprend une analyse de cause racine (méthode des 5 pourquoi) et l
 |---|---|
 | Prise en charge | Notification automatique GLPI (priorité attribuée) |
 | P1 / P2 en cours | Point d'avancement toutes les heures (suivi public du ticket, information de la direction pour un P1) |
+| P3 / P4 en cours | Suivi public du ticket à chaque changement d'état (prise en charge, attente, résolution) |
 | Résolution | Information du rétablissement et demande de confirmation |
 
 ## 5. Modèle de ticket
